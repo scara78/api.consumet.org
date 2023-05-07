@@ -1,3 +1,20 @@
+# v0.0.2 (Sun May 07 2023)
+
+#### ⚠️ Pushed to `main`
+
+- Added deploy.yml file ([@scara78](https://github.com/scara78))
+- Added release.yml file ([@scara78](https://github.com/scara78))
+- Added deploy.sh file ([@scara78](https://github.com/scara78))
+- Added .autorc file ([@scara78](https://github.com/scara78))
+- Added amber.yaml secrets file ([@scara78](https://github.com/scara78))
+- Added flask quickstart ([@scara78](https://github.com/scara78))
+
+#### Authors: 1
+
+- [@scara78](https://github.com/scara78)
+
+---
+
 # v0.0.1 (Sun May 07 2023)
 
 :tada: This release contains work from new contributors! :tada:
