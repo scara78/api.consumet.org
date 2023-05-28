@@ -5,22 +5,22 @@ import gogoanime from './gogoanime';
 import animepahe from './animepahe';
 import zoro from './zoro';
 import nineanime from './9anime';
-import animixplay from './animixplay';
 import animefox from './animefox';
 import enime from './enime';
 import crunchyroll from './crunchyroll';
 import bilibili from './bilibili';
+import marin from './marin';
 
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
-  await fastify.register(gogoanime, { prefix: '/' });
-  await fastify.register(animepahe, { prefix: '/' });
-  await fastify.register(zoro, { prefix: '/' });
-  await fastify.register(nineanime, { prefix: '/' });
-  await fastify.register(animixplay, { prefix: '/' });
-  await fastify.register(animefox, { prefix: '/' });
-  await fastify.register(enime, { prefix: '/' });
-  await fastify.register(crunchyroll, { prefix: '/' });
-  await fastify.register(bilibili, { prefix: '/' });
+  await fastify.register(gogoanime, { prefix: '/gogoanime' });
+  await fastify.register(animepahe, { prefix: '/animepahe' });
+  await fastify.register(zoro, { prefix: '/zoro' });
+  await fastify.register(nineanime, { prefix: '/9anime' });
+  await fastify.register(animefox, { prefix: '/animefox' });
+  await fastify.register(enime, { prefix: '/enime' });
+  await fastify.register(crunchyroll, { prefix: '/crunchyroll' });
+  await fastify.register(bilibili, { prefix: '/bilibili' });
+  await fastify.register(marin, { prefix: '/marin' });
 
   fastify.get('/', async (request: any, reply: any) => {
     reply.status(200).send('Welcome to Consumet Anime 🗾');

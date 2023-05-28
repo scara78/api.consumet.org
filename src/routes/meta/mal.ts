@@ -1,11 +1,10 @@
 import { FastifyRequest, FastifyReply, FastifyInstance, RegisterOptions } from 'fastify';
 import { META, PROVIDERS_LIST } from '@consumet/extensions';
-import Crunchyroll from '@consumet/extensions/dist/providers/anime/crunchyroll';
 
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   let mal = new META.Myanimelist();
 
-  fastify.get('/mal', (_, rp) => {
+  fastify.get('/', (_, rp) => {
     rp.status(200).send({
       intro:
         "Welcome to the mal provider: check out the provider's website @ https://mal.co/",
@@ -14,7 +13,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     });
   });
 
-  fastify.get('/mal/:query', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/:query', async (request: FastifyRequest, reply: FastifyReply) => {
     const query = (request.params as { query: string }).query;
 
     const page = (request.query as { page: number }).page;
@@ -26,7 +25,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   });
 
   // mal info with episodes
-  fastify.get('/mal/info/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/info/:id', async (request: FastifyRequest, reply: FastifyReply) => {
     const id = (request.params as { id: string }).id;
 
     const provider = (request.query as { provider?: string }).provider;
@@ -38,18 +37,8 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       const possibleProvider = PROVIDERS_LIST.ANIME.find(
         (p) => p.name.toLowerCase() === provider.toLocaleLowerCase()
       );
-      if (possibleProvider instanceof Crunchyroll) {
-        mal = new META.Myanimelist(
-          await Crunchyroll.create(
-            locale ?? 'en-US',
-            (
-              global as typeof globalThis & {
-                CrunchyrollToken: string;
-              }
-            ).CrunchyrollToken
-          )
-        );
-      } else mal = new META.Myanimelist(possibleProvider);
+
+      mal = new META.Myanimelist(possibleProvider);
     }
 
     if (isDub === 'true' || isDub === '1') isDub = true;
@@ -69,7 +58,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
   });
 
   fastify.get(
-    '/mal/watch/:episodeId',
+    '/watch/:episodeId',
     async (request: FastifyRequest, reply: FastifyReply) => {
       const episodeId = (request.params as { episodeId: string }).episodeId;
       const provider = (request.query as { provider?: string }).provider;
@@ -78,18 +67,8 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         const possibleProvider = PROVIDERS_LIST.ANIME.find(
           (p) => p.name.toLowerCase() === provider.toLocaleLowerCase()
         );
-        if (possibleProvider instanceof Crunchyroll) {
-          mal = new META.Myanimelist(
-            await Crunchyroll.create(
-              'en-US',
-              (
-                global as typeof globalThis & {
-                  CrunchyrollToken: string;
-                }
-              ).CrunchyrollToken
-            )
-          );
-        } else mal = new META.Myanimelist(possibleProvider);
+
+        mal = new META.Myanimelist(possibleProvider);
       }
       try {
         const res = await mal

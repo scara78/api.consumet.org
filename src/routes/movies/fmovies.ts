@@ -2,15 +2,25 @@ import { FastifyRequest, FastifyReply, FastifyInstance, RegisterOptions } from '
 import { MOVIES } from '@consumet/extensions';
 import { StreamingServers } from '@consumet/extensions/dist/models';
 
+import cache from '../../utils/cache';
+import { redis } from '../../main';
+import { Redis } from 'ioredis';
+
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
-  const viewAsian = new MOVIES.ViewAsian();
+  const fmovies = new MOVIES.Fmovies(
+    process.env.NINE_ANIME_HELPER_URL,
+    {
+      url: process.env.NINE_ANIME_PROXY as string,
+    },
+    process.env?.NINE_ANIME_HELPER_KEY
+  );
 
   fastify.get('/', (_, rp) => {
     rp.status(200).send({
       intro:
-        "Welcome to the viewAsian provider: check out the provider's website @ https://viewAsian.to/",
+        "Welcome to the fmovies provider: check out the provider's website @ https://fmovies.to/",
       routes: ['/:query', '/info', '/watch'],
-      documentation: 'https://docs.consumet.org/#tag/viewAsian',
+      documentation: 'https://docs.consumet.org/#tag/fmovies',
     });
   });
 
@@ -19,7 +29,14 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
     const page = (request.query as { page: number }).page;
 
-    const res = await viewAsian.search(query, page);
+    let res = redis
+      ? await cache.fetch(
+          redis as Redis,
+          `fmovies:${query}:${page}`,
+          async () => await fmovies.search(query, page ? page : 1),
+          60 * 60 * 6
+        )
+      : await fmovies.search(query, page ? page : 1);
 
     reply.status(200).send(res);
   });
@@ -33,9 +50,14 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       });
 
     try {
-      const res = await viewAsian
-        .fetchMediaInfo(id)
-        .catch((err) => reply.status(404).send({ message: err }));
+      let res = redis
+        ? await cache.fetch(
+            redis as Redis,
+            `fmovies:info:${id}`,
+            async () => await fmovies.fetchMediaInfo(id),
+            60 * 60 * 3
+          )
+        : await fmovies.fetchMediaInfo(id);
 
       reply.status(200).send(res);
     } catch (err) {
@@ -48,18 +70,26 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
   fastify.get('/watch', async (request: FastifyRequest, reply: FastifyReply) => {
     const episodeId = (request.query as { episodeId: string }).episodeId;
+    const mediaId = (request.query as { mediaId: string }).mediaId;
     const server = (request.query as { server: StreamingServers }).server;
 
     if (typeof episodeId === 'undefined')
       return reply.status(400).send({ message: 'episodeId is required' });
+    if (typeof mediaId === 'undefined')
+      return reply.status(400).send({ message: 'mediaId is required' });
 
     if (server && !Object.values(StreamingServers).includes(server))
       return reply.status(400).send({ message: 'Invalid server query' });
 
     try {
-      const res = await viewAsian
-        .fetchEpisodeSources(episodeId, server)
-        .catch((err) => reply.status(404).send({ message: 'Media Not found.' }));
+      let res = redis
+        ? await cache.fetch(
+            redis as Redis,
+            `fmovies:watch:${episodeId}:${mediaId}:${server}`,
+            async () => await fmovies.fetchEpisodeSources(episodeId, mediaId, server),
+            60 * 30
+          )
+        : await fmovies.fetchEpisodeSources(episodeId, mediaId, server);
 
       reply.status(200).send(res);
     } catch (err) {

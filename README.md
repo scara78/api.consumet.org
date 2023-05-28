@@ -33,6 +33,9 @@ Consumet scrapes data from various websites and provides APIs for accessing the 
   - [Locally](#locally)
   - [Docker](#docker)
   - [Heroku](#heroku)
+  - [Vercel](#vercel)
+  - [Render](#render)
+  - [Railway](#railway)
 - [Documentation](#documentation)
 - [Development](#development)
 - [Showcases](#showcases)
@@ -75,6 +78,21 @@ You can add `-d` flag to run the server in detached mode.
 Host your own instance of Consumet API on Heroku using the button below.
 
 [![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/consumet/api.consumet.org/tree/main)
+
+### Vercel
+Host your own instance of Consumet API on Vercel using the button below.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fconsumet%2Fapi.consumet.org)
+
+### Render
+Host your own instance of Consumet API on Render using the button below.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/consumet/api.consumet.org)
+
+### Railway
+Host your own instance of Consumet API on Railway using the button below.
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/C0FwuP?referralCode=dv4TuD)
 
 ## Documentation
 Please refer to the [documentation](https://docs.consumet.org). Join our [Discord server](https://discord.gg/qTPfvMxzNH) if you need any additional help or have any questions, comments, or suggestions.

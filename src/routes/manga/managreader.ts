@@ -1,23 +1,20 @@
 import { FastifyRequest, FastifyReply, FastifyInstance, RegisterOptions } from 'fastify';
 import { MANGA } from '@consumet/extensions';
-
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
-  const mangahere = new MANGA.MangaHere();
+  const managreader = new MANGA.MangaReader();
 
   fastify.get('/', (_, rp) => {
     rp.status(200).send({
-      intro: `Welcome to the MangaHere provider: check out the provider's website @ ${mangahere.toString.baseUrl}`,
+      intro: `Welcome to the Mangapill provider: check out the provider's website @ ${managreader.toString.baseUrl}`,
       routes: ['/:query', '/info', '/read'],
-      documentation: 'https://docs.consumet.org/#tag/mangahere',
+      documentation: 'https://docs.consumet.org/#tag/mangapill',
     });
   });
 
   fastify.get('/:query', async (request: FastifyRequest, reply: FastifyReply) => {
     const query = (request.params as { query: string }).query;
 
-    const page = (request.query as { page: number }).page;
-
-    const res = await mangahere.search(query, page);
+    const res = await managreader.search(query);
 
     reply.status(200).send(res);
   });
@@ -29,9 +26,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       return reply.status(400).send({ message: 'id is required' });
 
     try {
-      const res = await mangahere
-        .fetchMangaInfo(id)
-        .catch((err) => reply.status(404).send({ message: err }));
+      const res = await managreader.fetchMangaInfo(id);
 
       reply.status(200).send(res);
     } catch (err) {
@@ -48,7 +43,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       return reply.status(400).send({ message: 'chapterId is required' });
 
     try {
-      const res = await mangahere
+      const res = await managreader
         .fetchChapterPages(chapterId)
         .catch((err: Error) => reply.status(404).send({ message: err.message }));
 
