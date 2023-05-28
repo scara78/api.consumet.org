@@ -1,3 +1,77 @@
+# v0.0.3 (Sun May 28 2023)
+
+:tada: This release contains work from new contributors! :tada:
+
+Thanks for all your work!
+
+:heart: null[@scara78](https://github.com/scara78)
+
+:heart: Eltik ([@Eltik](https://github.com/Eltik))
+
+:heart: null[@ErrorErrorError](https://github.com/ErrorErrorError)
+
+:heart: illusions ([@illusionTBA](https://github.com/illusionTBA))
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'consumet:main' into main ([@scara78](https://github.com/scara78))
+- chore(deps): lock file maintenance ([@renovate[bot]](https://github.com/renovate[bot]))
+- chore: cleanup dependacies ([@riimuru](https://github.com/riimuru))
+- fix builds ([@riimuru](https://github.com/riimuru))
+- change Node.js CI branch from `master` -> `main` ([@riimuru](https://github.com/riimuru))
+- Add Nodejs CI ([@riimuru](https://github.com/riimuru))
+- Update index.ts ([@riimuru](https://github.com/riimuru))
+- Fix image-proxy and update package.json ([@Eltik](https://github.com/Eltik))
+- shhhh secrets ([@TDanks2000](https://github.com/TDanks2000))
+- fix issues ([@riimuru](https://github.com/riimuru))
+- fix marin (tommydanks2000@hotmail.com)
+- Update main.ts ([@TDanks2000](https://github.com/TDanks2000))
+- Add Railway deploy button ([@riimuru](https://github.com/riimuru))
+- Update .env.example ([@riimuru](https://github.com/riimuru))
+- fix: nineanime now works in meta/anilist route ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- 9anime taking off again... (tommydanks2000@hotmail.com)
+- Create LICENSE ([@riimuru](https://github.com/riimuru))
+- Delete LICENSE ([@riimuru](https://github.com/riimuru))
+- fix 9anime ([@riimuru](https://github.com/riimuru))
+- Update .env.example ([@TDanks2000](https://github.com/TDanks2000))
+- Update package.json ([@TDanks2000](https://github.com/TDanks2000))
+- Update dependabot.yml ([@TDanks2000](https://github.com/TDanks2000))
+- Update package.json ([@5H4D0WILA](https://github.com/5H4D0WILA))
+- added recent episodes to marin ([@5H4D0WILA](https://github.com/5H4D0WILA))
+- added marin ([@5H4D0WILA](https://github.com/5H4D0WILA))
+- chore: bump @consumet/extensions to v1.3.5 ([@riimuru](https://github.com/riimuru))
+- bump @consumet/extensions to 1.3.4 ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- Update gogoanime.ts ([@TDanks2000](https://github.com/TDanks2000))
+- bump consumet.ts version to 1.3.3 ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- Added Cronchy as Crunchyroll ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- kamyroll now is their own provider ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- Update package.json ([@illusionTBA](https://github.com/illusionTBA))
+- Added todo, restart server for kamyroll ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- fix kamyroll ([@riimuru](https://github.com/riimuru))
+- Add server param to anilist watch route ([@riimuru](https://github.com/riimuru))
+- fix anilist advanced search ([@riimuru](https://github.com/riimuru))
+- fix gogoanime routes ([@riimuru](https://github.com/riimuru))
+- refactor fastify path structure ([@riimuru](https://github.com/riimuru))
+- remove unused console log ([@TDanks2000](https://github.com/TDanks2000))
+- BYE AnimixPlay, switch consumet/extensions to git ([@TDanks2000](https://github.com/TDanks2000))
+- fix issue where a change in anilist meta might interfere with other routes ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- fix issues where caching not returning correct episode info ([@ErrorErrorError](https://github.com/ErrorErrorError))
+- cache more anilist routes ([@riimuru](https://github.com/riimuru))
+
+#### Authors: 9
+
+- [@ErrorErrorError](https://github.com/ErrorErrorError)
+- [@renovate[bot]](https://github.com/renovate[bot])
+- [@scara78](https://github.com/scara78)
+- Eltik ([@Eltik](https://github.com/Eltik))
+- illusions ([@illusionTBA](https://github.com/illusionTBA))
+- InumakiEU ([@5H4D0WILA](https://github.com/5H4D0WILA))
+- Marouane ([@riimuru](https://github.com/riimuru))
+- Tdanks2000 ([@TDanks2000](https://github.com/TDanks2000))
+- Tommy Danks (tommydanks2000@hotmail.com)
+
+---
+
 # v0.0.2 (Sun May 07 2023)
 
 #### ⚠️ Pushed to `main`
