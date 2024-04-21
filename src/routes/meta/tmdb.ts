@@ -31,7 +31,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
     if (typeof provider !== 'undefined') {
       const possibleProvider = PROVIDERS_LIST.MOVIES.find(
-        (p) => p.name.toLowerCase() === provider.toLocaleLowerCase()
+        (p) => p.name.toLowerCase() === provider.toLocaleLowerCase(),
       );
       tmdb = new META.TMDB(tmdbApi, possibleProvider);
     }
@@ -40,13 +40,42 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     reply.status(200).send(res);
   });
 
+  fastify.get('/trending', async (request: FastifyRequest, reply: FastifyReply) => {
+    const validTimePeriods = new Set(['day', 'week'] as const);
+    type validTimeType = typeof validTimePeriods extends Set<infer T> ? T : undefined
+    
+    const type = (request.query as { type?: string }).type || 'all';
+    let timePeriod = (request.query as { timePeriod?: validTimeType }).timePeriod || 'day';
+
+    // make day as default time period
+    if (!validTimePeriods.has(timePeriod)) timePeriod = 'day';
+
+    const page = (request.query as { page?: number }).page || 1;
+
+    const tmdb = new META.TMDB(tmdbApi);
+
+    try {
+      const res = await tmdb.fetchTrending(type, timePeriod, page);
+      reply.status(200).send(res);
+    } catch (err) {
+      reply.status(500).send({ message: 'Failed to fetch trending media.' });
+    }
+  });
+
   fastify.get(
     '/watch/:episodeId',
     async (request: FastifyRequest, reply: FastifyReply) => {
       const episodeId = (request.params as { episodeId: string }).episodeId;
       const id = (request.query as { id: string }).id;
-      const tmdb = new META.TMDB(tmdbApi);
+      const provider = (request.query as { provider?: string }).provider;
 
+      let tmdb = new META.TMDB(tmdbApi);
+      if (typeof provider !== 'undefined') {
+        const possibleProvider = PROVIDERS_LIST.MOVIES.find(
+          (p) => p.name.toLowerCase() === provider.toLocaleLowerCase(),
+        );
+        tmdb = new META.TMDB(tmdbApi, possibleProvider);
+      }
       try {
         const res = await tmdb
           .fetchEpisodeSources(episodeId, id)
@@ -58,7 +87,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
           .status(500)
           .send({ message: 'Something went wrong. Contact developer for help.' });
       }
-    }
+    },
   );
 };
 
