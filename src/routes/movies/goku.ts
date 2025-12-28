@@ -7,11 +7,11 @@ import { redis, REDIS_TTL } from '../../main';
 import { Redis } from 'ioredis';
 
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
-  const flixhq = new MOVIES.FlixHQ();
+  const goku = new MOVIES.Goku();
 
   fastify.get('/', (_, rp) => {
     rp.status(200).send({
-      intro: `Welcome to the flixhq provider: check out the provider's website @ ${flixhq.toString.baseUrl}`,
+      intro: `Welcome to the goku provider: check out the provider's website @ ${goku.toString.baseUrl}`,
       routes: [
         '/:query',
         '/info',
@@ -23,7 +23,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         '/country',
         '/genre',
       ],
-      documentation: 'https://docs.consumet.org/#tag/flixhq',
+      documentation: 'https://docs.consumet.org/#tag/goku',
     });
   });
 
@@ -35,11 +35,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     let res = redis
       ? await cache.fetch(
           redis as Redis,
-          `flixhq:${query}:${page}`,
-          async () => await flixhq.search(query, page ? page : 1),
+          `goku:${query}:${page}`,
+          async () => await goku.search(query, page ? page : 1),
           REDIS_TTL,
         )
-      : await flixhq.search(query, page ? page : 1);
+      : await goku.search(query, page ? page : 1);
 
     reply.status(200).send(res);
   });
@@ -48,11 +48,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     let res = redis
       ? await cache.fetch(
           redis as Redis,
-          `flixhq:recent-shows`,
-          async () => await flixhq.fetchRecentTvShows(),
+          `goku:recent-shows`,
+          async () => await goku.fetchRecentTvShows(),
           REDIS_TTL,
         )
-      : await flixhq.fetchRecentTvShows();
+      : await goku.fetchRecentTvShows();
 
     reply.status(200).send(res);
   });
@@ -61,11 +61,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     let res = redis
       ? await cache.fetch(
           redis as Redis,
-          `flixhq:recent-movies`,
-          async () => await flixhq.fetchRecentMovies(),
+          `goku:recent-movies`,
+          async () => await goku.fetchRecentMovies(),
           REDIS_TTL,
         )
-      : await flixhq.fetchRecentMovies();
+      : await goku.fetchRecentMovies();
 
     reply.status(200).send(res);
   });
@@ -76,8 +76,8 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       if (!type) {
         const res = {
           results: [
-            ...(await flixhq.fetchTrendingMovies()),
-            ...(await flixhq.fetchTrendingTvShows()),
+            ...(await goku.fetchTrendingMovies()),
+            ...(await goku.fetchTrendingTvShows()),
           ],
         };
         return reply.status(200).send(res);
@@ -86,16 +86,16 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       let res = redis
         ? await cache.fetch(
             redis as Redis,
-            `flixhq:trending:${type}`,
+            `goku:trending:${type}`,
             async () =>
               type === 'tv'
-                ? await flixhq.fetchTrendingTvShows()
-                : await flixhq.fetchTrendingMovies(),
+                ? await goku.fetchTrendingTvShows()
+                : await goku.fetchTrendingMovies(),
             REDIS_TTL,
           )
         : type === 'tv'
-          ? await flixhq.fetchTrendingTvShows()
-          : await flixhq.fetchTrendingMovies();
+          ? await goku.fetchTrendingTvShows()
+          : await goku.fetchTrendingMovies();
 
       reply.status(200).send(res);
     } catch (error) {
@@ -118,11 +118,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       let res = redis
         ? await cache.fetch(
             redis as Redis,
-            `flixhq:info:${id}`,
-            async () => await flixhq.fetchMediaInfo(id),
+            `goku:info:${id}`,
+            async () => await goku.fetchMediaInfo(id),
             REDIS_TTL,
           )
-        : await flixhq.fetchMediaInfo(id);
+        : await goku.fetchMediaInfo(id);
 
       reply.status(200).send(res);
     } catch (err) {
@@ -137,7 +137,6 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     const episodeId = (request.query as { episodeId: string }).episodeId;
     const mediaId = (request.query as { mediaId: string }).mediaId;
     const server = (request.query as { server: StreamingServers }).server;
-
     if (typeof episodeId === 'undefined')
       return reply.status(400).send({ message: 'episodeId is required' });
     if (typeof mediaId === 'undefined')
@@ -150,12 +149,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       let res = redis
         ? await cache.fetch(
             redis as Redis,
-            `flixhq:watch:${episodeId}:${mediaId}:${server}`,
-            async () => await flixhq.fetchEpisodeSources(episodeId, mediaId, server),
+            `goku:watch:${episodeId}:${mediaId}:${server}`,
+            async () => await goku.fetchEpisodeSources(episodeId, mediaId, server),
             REDIS_TTL,
           )
-        : await flixhq.fetchEpisodeSources(episodeId, mediaId, server);
-
+        : await goku.fetchEpisodeSources(episodeId, mediaId, StreamingServers.VidCloud);
       reply.status(200).send(res);
     } catch (err) {
       reply
@@ -177,11 +175,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       let res = redis
         ? await cache.fetch(
             redis as Redis,
-            `flixhq:servers:${episodeId}:${mediaId}`,
-            async () => await flixhq.fetchEpisodeServers(episodeId, mediaId),
+            `goku:servers:${episodeId}:${mediaId}`,
+            async () => await goku.fetchEpisodeServers(episodeId, mediaId),
             REDIS_TTL,
           )
-        : await flixhq.fetchEpisodeServers(episodeId, mediaId);
+        : await goku.fetchEpisodeServers(episodeId, mediaId);
 
       reply.status(200).send(res);
     } catch (error) {
@@ -201,11 +199,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
         let res = redis
           ? await cache.fetch(
               redis as Redis,
-              `flixhq:country:${country}:${page}`,
-              async () => await flixhq.fetchByCountry(country, page),
+              `goku:country:${country}:${page}`,
+              async () => await goku.fetchByCountry(country, page),
               REDIS_TTL,
             )
-          : await flixhq.fetchByCountry(country, page);
+          : await goku.fetchByCountry(country, page);
 
         reply.status(200).send(res);
       } catch (error) {
@@ -224,11 +222,11 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       let res = redis
         ? await cache.fetch(
             redis as Redis,
-            `flixhq:genre:${genre}:${page}`,
-            async () => await flixhq.fetchByGenre(genre, page),
+            `goku:genre:${genre}:${page}`,
+            async () => await goku.fetchByGenre(genre, page),
             REDIS_TTL,
           )
-        : await flixhq.fetchByGenre(genre, page);
+        : await goku.fetchByGenre(genre, page);
 
       reply.status(200).send(res);
     } catch (error) {
@@ -239,4 +237,5 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     }
   });
 };
+
 export default routes;
